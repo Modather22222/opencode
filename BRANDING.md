@@ -116,6 +116,48 @@ guides every decision; phases order the actual work.
 | 5. Art assets | appycode logo/wordmark/icon set, splash + about tiles | design-dependent | low (fork-only files) |
 | 6. (later) own release channel | updater URLs, brew tap, npm scope | separate project | n/a until then |
 
+## Phase 3 execution log (2026-10-29)
+
+Surface: `packages/app` (web app + desktop renderer). ~1,586 user-visible
+`OpenCode` occurrences across the i18n layer + shell chrome rebranded.
+
+Method:
+
+1. i18n transform (`packages/app/src/runtime/i18n/*.ts` — language files +
+   `desktop-native.ts`): char-masked replace `OpenCode → appycode` (1,586
+   occurrences), with English-literal protection spans for service names
+   (Console / Go / Free — untranslated in every locale), plus
+   `opencode pair → appycode pair` (pairing instructions; our binary name).
+2. Translate-phrasing gap fix: protection matches only English literals, so
+   translated keep-class strings (trademark line, free-models title,
+   "OpenCode connected", "Connect to OpenCode", remote-credentials copy)
+   over-rebranded in non-Latin locales; restored verbatim from git HEAD per
+   key — `settings.about.trademark`,
+   `dialog.model.unpaid.freeModels.title`, `provider.connect.console.connected`,
+   `provider.connect.opencode.errorTitle`, `provider.connect.opencode.name`,
+   `provider.connect.opencode.freeName`, `provider.connect.remote.description`,
+   `command.provider.connect.description`, `command.usage.view.description` —
+   124 entries restored.
+3. Shell chrome: `app.tsx` `<Title>`, windows-menu group label,
+   connect-screen brand aria-label, voice personas (`liveInstructions` +
+   delegator `instructions`). The "Adapted from the OpenCode iOS app"
+   provenance comment stays (factual attribution).
+4. Dev-tooling consistency: 10 storybook `title: "OpenCode/…"` component
+   paths → `"Appycode/…"` (provider fixtures inside them untouched).
+
+Kept (audit result — every remaining `OpenCode` classified): OpenCode
+Console/Go/Free copy incl. usage sections; trademark line verbatim in all 63
+translated locales; provider display suffix ` / OpenCode`
+(`providers/catalog/console.ts`), `OpenCode / ${name}`
+(`composer/model-label.ts`) and their test fixtures; `OpenCodeLogo` provider
+icon; `OpenCode.make/Client/Event`, `X-OpenCode-Capabilities`, `@opencode/*`
+imports, `.opencode` config conventions and opencode.ai doc links.
+
+Verification: `bun typecheck` in `packages/app` — clean (1,883 files);
+keep-key grep audit — remaining `OpenCode` in i18n maps only to the keep set
+above; trademark/free-models lines match HEAD verbatim in sampled locales
+with zero stray `appycode` substitutions in the keep class.
+
 ## Phase 2 execution log (2026-10-29)
 
 Brand palette provided by the user:
