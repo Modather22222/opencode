@@ -116,6 +116,51 @@ guides every decision; phases order the actual work.
 | 5. Art assets | appycode logo/wordmark/icon set, splash + about tiles | design-dependent | low (fork-only files) |
 | 6. (later) own release channel | updater URLs, brew tap, npm scope | separate project | n/a until then |
 
+## Phase 2 execution log (2026-10-29)
+
+Brand palette provided by the user:
+
+```css
+--primary: #0e3a53;  --primary-hover: #0a2c41;  --primary-mid: #1b6284;
+--primary-tint: #e6edf1;  --accent: #96591a;  --accent-bright: #c8873c;
+--accent-tint: #f6ece0;
+```
+
+Method: fork-only theme document at `packages/tui/src/theme/assets/v2/appycode.json`,
+generated from upstream's `opencode.json` with hue-only transformation — each
+stop's lightness/saturation preserved so legibility equals upstream, hue
+reassigned: `blue` ramp → primary navy family (light derived from
+`--primary-mid`, dark from `--primary`), `orange` ramp → amber family
+(`--accent-bright`). Structural parity with upstream verified (identical token
+key set); net diff = 36 ramp stops + 2 mode mappings.
+
+Identity mapping (both modes): `accent → $hue.orange` (amber), `interactive →
+$hue.blue` (primary navy). Upstream light already matched this; dark was
+reassigned from `{accent: purple, interactive: orange}`.
+
+Registration edits (each logged in `FORK.md`):
+
+| File | Edit |
+| --- | --- |
+| `theme/index.ts` | `appycode.json` import, `getAppycodeTheme()`, `listThemes()` entry, `system` ultimate-fallback → appycode |
+| `context/theme.tsx` | 7 default-flow sites: initial active, config-name fallback, discovery-error fallback, missing-name default, error path (rethrow + fallback load) |
+| `mini/theme.ts` | import, mini default name, RUN_THEME_FALLBACK(s), resolve fallback chain — `getOpenCodeTheme()` → `getAppycodeTheme()` |
+| `dialog-config.tsx` | `theme.name` setting default → `"appycode"` |
+
+Verification:
+
+1. `bun typecheck` (packages/tui) — clean, 1,773 files.
+2. Runtime document resolution: modes `["light","dark"]`; dark bg
+   `rgb(10,10,10)` / light bg white — upstream-grade base surfaces preserved.
+3. Brand check: dark `syntax.keyword`/`markdown.heading` → `#fac383`
+   (accent-bright family); light → `#d68527` (accent family).
+
+Kept: the `opencode` theme remains registered for configs referencing it; gray
+neutrals stock (brand-tinted ink is a future iteration); `theme.mode` default
+stays `system`. User-level overrides: `<config-dir>/themes/<name>.json`
+discovered live with file basename as theme id.
+
+
 ## Phase 1 execution log (2026-10-29)
 
 Audit method: exhaustive enumeration of every `OpenCode` occurrence in

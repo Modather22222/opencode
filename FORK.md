@@ -27,6 +27,7 @@ file was changed and what must be preserved.
 | Fork README | `README.md` | appycode intro, attribution | none — content divergence is intentional |
 | Branding inventory | `BRANDING.md` | fork-only brand map and phase plan | none (fork-only addition) |
 | Branding phase 1 | 12 files in `packages/tui/src` (see `BRANDING.md` execution log) | visible strings say appycode, `OC \|` → `Appy \|` titles | medium — string-level only; on conflicts keep our copy |
+| Branding phase 2 theme | `packages/tui/src/theme/assets/v2/appycode.json` (fork-only); edits in `theme/index.ts`, `context/theme.tsx`, `mini/theme.ts`, `component/dialog-config.tsx` | appycode is the registered default theme (navy/amber brand) | medium — small literal swaps; keep ours on conflict; re-base `appycode.json` if upstream updates `opencode.json` |
 
 ## Environment quirks
 
