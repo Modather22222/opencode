@@ -116,6 +116,57 @@ guides every decision; phases order the actual work.
 | 5. Art assets | appycode logo/wordmark/icon set, splash + about tiles | design-dependent | low (fork-only files) |
 | 6. (later) own release channel | updater URLs, brew tap, npm scope | separate project | n/a until then |
 
+## Phase 5 execution log — icons + favicons (2026-10-29)
+
+Generated the appycode icon and the full downstream asset pipeline from one
+committed 1024px master. Tooling: pure-stdlib Python generator
+(`packages/desktop/icons/generate.py`, committed) — analytic-SDF rasterizer +
+pyramid/area resampler + ICNS/ICO writers, since Pillow/numpy/ImageMagick were
+unavailable in this environment and pip timed out. `bun tauri icon` + Image2Icon
+(the upstream process in `icons/README.md`) remain the upstream path; our script
+reproduces their invariants (premultiplied ICNS ladder, Big Sur padding/shadow,
+`dock.png` sync).
+
+Mark design (first attempt discarded): an amber lowercase "a" (donut bowl +
+flush right stem) rendered as only a ring — the stem coincided with the ring's
+right band and vanished. Final mark: rounded **frame ring** in `#c8873c`
+(outer half-extent 260, thickness 96, corner radius 150) + **badge dot** in
+`#f6ece0` (center 708,708, r 90, drawn over the band) on the `#0e3a53`
+full-bleed canvas. Legible at 96 px and below; no baked rounding/shadow in the
+master (channels/pipeline apply them).
+
+| Output set | Files |
+| --- | --- |
+| 3 desktop channels × 53 | `icons/{dev,beta,prod}/**` (linux/tauri/ios/android ladder + `icon.icns`/`icon.ico`/`dock.png`) — **byte-identical across channels** |
+| Favicon set | `packages/ui/src/assets/favicon/` (8 files: v3 + v1 twins of 96 PNG, SVG, ICO, apple-touch 180²) |
+
+Decisions:
+
+- One master art across dev/beta/prod instead of upstream's per-channel art
+  (channel distinction stays in product names/appIds from Phase 4).
+- Android adaptive `ic_launcher_background` color `#fff` → `#0E3A53`.
+- Every regenerated file matches its committed source pixel size exactly
+  (audit: 49 PNGs/channel valid + exact-size parity; `icon.ico` entries
+  16–256; `icon.icns` codes icp4/icp5/icp6/ic07/ic08/ic09/ic10).
+
+Code references repointed from the remote `https://opencode.ai/favicon-96x96-v3.png`
+to the packaged root path `/favicon-96x96-v3.png` (served by `electron.vite`
+`publicDir` for both the desktop renderer and the web app; origin-root
+consistent with the app's existing `location.origin` usage):
+
+- `packages/desktop/src/renderer/platform/notifications.ts`
+- `packages/app/src/runtime/platform/web.ts`
+
+Verification: 49/49 PNGs per channel parse with exact committed size parity;
+ICO ladders 16–256 (prod) and 16/24/32/48/64/96/256 (favicon); ICNS member
+codes match upstream's set; android backgrounds `#0E3A53`; visual check of the
+master, `dock.png` composite and 96 px favicon; `bun typecheck` clean in
+`packages/desktop` (2,937 files) and `packages/app` (1,883 files).
+
+Remaining in Phase 5 (deferred; separate art pass): `<Wordmark />` visual on the
+connect screen, about-page animated wordmark, TUI `logo.ts` art, splash/about
+tiles.
+
 ## Phase 4 execution log (2026-10-29)
 
 Desktop identity rebranded. New application identity: appId

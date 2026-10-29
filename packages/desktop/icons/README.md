@@ -1,5 +1,31 @@
 # Tauri Icons
 
+## Fork regen (appycode)
+
+All icons and favicons regenerate from one committed 1024px master via a pure-stdlib
+Python script — no Tauri CLI or Image2Icon needed:
+
+```
+cd packages/desktop/icons && python3 generate.py
+```
+
+- Source of truth: `icons/app-icon.png` (this master; committed here instead of `packages/desktop/app-icon.png`).
+- Mark: rounded **frame ring** in `--accent-bright` `#c8873c` (outer half-extent 260,
+  thickness 96, corner radius 150) with a **badge dot** in `--accent-tint` `#f6ece0`
+  (center 708,708, r 90) drawn over the corner, on the `--primary` `#0e3a53` full-bleed canvas.
+- Outputs: all files in `icons/{dev,beta,prod}` are **byte-identical across channels**
+  (single brand art; upstream had per-channel art) plus the favicon set in
+  `packages/app/public/{favicon-96x96-v3.png,favicon-96x96.png,favicon-v3.svg,favicon.svg,favicon-v3.ico,favicon.ico}`
+  (v1 twins copy the v3 art; android `ic_launcher_background.xml` patched to `#0E3A53`).
+- The script keeps the upstream invariants below: ICNS members stay premultiplied
+  composites (squircle content at 824/1024, corner radius 185.4, soft analytic shadow)
+  and `dock.png` is the unpremultiplied straight-alpha export of the 256px composite.
+- When trimming, remember every file's pixel size must match its committed source
+  exactly (e.g. `ic_launcher.png` hdpi is 49×49, `Square284x284Logo` is 284²,
+  iOS `83.5x83.5@2x` is 167²).
+
+## Upstream process
+
 Here's the process I've been using to create icons:
 
 - Save source image as `app-icon.png` in `packages/desktop`
