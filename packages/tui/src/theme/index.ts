@@ -7,6 +7,7 @@ import {
 } from "@opencode/theme/tui"
 import { resolveThemeColors } from "./resolve"
 import { DEFAULT_THEMES, type Theme, type ThemeV1Json } from "./v1"
+import appycodeThemeAsset from "./assets/v2/appycode.json" with { type: "json" }
 import opencode from "./assets/v2/opencode.json" with { type: "json" }
 import opencode2 from "./assets/v2/opencode2.json" with { type: "json" }
 
@@ -22,6 +23,20 @@ let opencodeTheme: (ThemeDocument & {
   readonly light: ModeDefinition
   readonly dark: ModeDefinition
 }) | undefined
+
+let appyTheme: (ThemeDocument & {
+  readonly light: ModeDefinition
+  readonly dark: ModeDefinition
+}) | undefined
+
+// The fork's registry theme: opencode's token structure re-hued to the appycode brand
+// palette (navy/amber), with accent/interactive maps reassigned in dark mode.
+export function getAppycodeTheme() {
+  if (appyTheme) return appyTheme
+  const document = parseThemeDocument(appycodeThemeAsset, "appycode") as NonNullable<typeof appyTheme>
+  appyTheme = document
+  return document
+}
 
 export function getOpenCodeTheme() {
   if (opencodeTheme) return opencodeTheme
@@ -43,12 +58,13 @@ function listThemes(): Record<string, ThemeDocumentSource> {
   // Priority: defaults < custom files < generated system.
   const themes: Record<string, ThemeDocumentSource> = {
     ...DEFAULT_THEMES,
+    appycode: getAppycodeTheme(),
     opencode: getOpenCodeTheme(),
     ...customThemes,
   }
   return {
     ...themes,
-    system: systemTheme ?? themes.system ?? themes.opencode,
+    system: systemTheme ?? themes.system ?? themes.appycode,
   }
 }
 
