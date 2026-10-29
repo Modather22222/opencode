@@ -25,6 +25,7 @@ file was changed and what must be preserved.
 | Rebrand app name (XDG roots) | `packages/util/src/global.ts` | isolate `~/.config/appycode` et al. from upstream opencode | likely conflict — keep the one-line change |
 | Rebrand CLI name | `packages/cli/src/commands/commands.ts`, `packages/cli/script/build.ts` | help/usage show `appycode` | likely conflict — keep literal swap |
 | Fork README | `README.md` | appycode intro, attribution | none — content divergence is intentional |
+| Branding inventory | `BRANDING.md` | fork-only brand map and phase plan | none (fork-only addition) |
 
 ## Environment quirks
 
