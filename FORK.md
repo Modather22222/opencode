@@ -28,6 +28,7 @@ file was changed and what must be preserved.
 | Branding inventory | `BRANDING.md` | fork-only brand map and phase plan | none (fork-only addition) |
 | Branding phase 1 | 12 files in `packages/tui/src` (see `BRANDING.md` execution log) | visible strings say appycode, `OC \|` → `Appy \|` titles | medium — string-level only; on conflicts keep our copy |
 | Branding phase 2 theme | `packages/tui/src/theme/assets/v2/appycode.json` (fork-only); edits in `theme/index.ts`, `context/theme.tsx`, `mini/theme.ts`, `component/dialog-config.tsx` | appycode is the registered default theme (navy/amber brand) | medium — small literal swaps; keep ours on conflict; re-base `appycode.json` if upstream updates `opencode.json` |
+| Branding phase 3 app shell | `packages/app/src/runtime/i18n/*.ts` (1,586 occurrences rebranded, keep-key restore from HEAD); `app.tsx` Title, `shell/titlebar/windows-menu.tsx`, `servers/connect/screen.tsx` aria-label, `voice/spec.ts` personas, 10 storybook `title:` paths | visible app surface says appycode; Console/Go/Free + trademark + provider labels verbatim | medium — locale files churn heavily upstream; on conflicts re-run the key-level restore (keep-keys listed in `BRANDING.md` phase 3 log) |
 
 ## Environment quirks
 
