@@ -116,6 +116,46 @@ guides every decision; phases order the actual work.
 | 5. Art assets | appycode logo/wordmark/icon set, splash + about tiles | design-dependent | low (fork-only files) |
 | 6. (later) own release channel | updater URLs, brew tap, npm scope | separate project | n/a until then |
 
+## Phase 4 execution log (2026-10-29)
+
+Desktop identity rebranded. New application identity: appId
+`dev.appycode.desktop` (`.beta` / `.dev` per channel), product names
+`appycode` / `appycode Beta` / `appycode Dev`, artifact name
+`appycode-desktop-*`.
+
+Edits:
+
+| File | Edit |
+| --- | --- |
+| `electron-builder.config.ts` | `APP_IDS`, `artifactName`, protocol display names; stale app-id comments refreshed |
+| `src/main/constants.ts` | `appIDs` / `appNames` + unpackaged dev fallbacks (`APP_ID`, `APP_NAME`) |
+| `src/main/windows/appearance.ts`, `early.ts`, `src/renderer/index.html` | window/document titles → `appycode` |
+| `script/copy-metainfo.ts` | appstream id/name/description/developer; bugtracker/vcs URLs → the fork repo; upstream screenshot asset kept (Phase 5) |
+| `package.json` | author → `appycode` (upstream email dropped), homepage → fork repo |
+| `script/bench-startup.ts` | `appIdFor` brand-family-aware: appycode names → `dev.appycode.desktop.*`, upstream names → `ai.opencode.desktop.*` so A/B benches against upstream builds in `dist/other` still resolve; default exe name; dev-channel proxy check now derives from channel (`.dev` suffix) not a hard-coded app id |
+| `README.md` | title, beta channel app id, bench seed/exe paths |
+| `electron-builder.config.test.ts` | channel identity table appIds (remaining assertions derive from config) |
+
+Kept / decisions:
+
+- Deep-link scheme `opencode://` unchanged — the redirect URI is registered by
+  the OpenCode Console service (kept upstream service); changing schemes would
+  break Console sign-in. Only the protocol *display name* rebranded.
+- Update feeds remain `https://opencode.ai/update/api/...` (upstream).
+  **Do not build distributables before Phase 6 lands own feeds**: the updater
+  would otherwise replace appycode installs with upstream-signed builds.
+- `resources/linux/opencode-desktop.desktop` legacy shim and its test
+  assertions kept verbatim — migration path for users arriving from upstream
+  Desktop whose pins still reference `/opt/OpenCode`.
+- `install-state.ts` legacy data detection (`opencode.settings`,
+  `opencode.global.dat`, `opencode` dir) kept — intentionally recognizes
+  upstream-era state so a fresh appycode install can migrate it.
+
+Verification: `bun test electron-builder.config.test.ts` — 7 pass / 193
+expects; `bun typecheck` in `packages/desktop` — clean (2,937 files);
+metainfo generation smoke — prod generates `dev.appycode.desktop` /
+`appycode`.
+
 ## Phase 3 execution log (2026-10-29)
 
 Surface: `packages/app` (web app + desktop renderer). ~1,586 user-visible
