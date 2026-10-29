@@ -26,6 +26,7 @@ file was changed and what must be preserved.
 | Rebrand CLI name | `packages/cli/src/commands/commands.ts`, `packages/cli/script/build.ts` | help/usage show `appycode` | likely conflict — keep literal swap |
 | Fork README | `README.md` | appycode intro, attribution | none — content divergence is intentional |
 | Branding inventory | `BRANDING.md` | fork-only brand map and phase plan | none (fork-only addition) |
+| Branding phase 1 | 12 files in `packages/tui/src` (see `BRANDING.md` execution log) | visible strings say appycode, `OC \|` → `Appy \|` titles | medium — string-level only; on conflicts keep our copy |
 
 ## Environment quirks
 
