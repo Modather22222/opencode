@@ -115,3 +115,39 @@ guides every decision; phases order the actual work.
 | 4. Desktop identity | electron-builder ids/names/protocols, window title, resources | ~2 h, verify by packaging | medium |
 | 5. Art assets | appycode logo/wordmark/icon set, splash + about tiles | design-dependent | low (fork-only files) |
 | 6. (later) own release channel | updater URLs, brew tap, npm scope | separate project | n/a until then |
+
+## Phase 1 execution log (2026-10-29)
+
+Audit method: exhaustive enumeration of every `OpenCode` occurrence in
+`packages/tui/src` (string literals, JSX text, template literals, comments),
+classified into functional / service-name / comment / visible-brand. Outcome:
+68 functional, ~15 service-namekeepers, ~8 comments, 23 visible-brand edits
+across 12 files.
+
+| File | Edits | Note |
+| --- | --- | --- |
+| `app.tsx` | 4 | terminal title ×2, session-title prefix `OC \|` → `Appy \|`, "Update appycode" |
+| `attention.ts` | 1 | `DEFAULT_TITLE` fallback title |
+| `mini/runtime.lifecycle.ts` | 1 | fallback terminal title |
+| `component/dialog-update.tsx` | 5 | updating/installing/success/copy incl. the literal `opencode` binary name users run |
+| `component/terminal-pane.tsx` | 1 | persistent-terminal restart copy |
+| `component/error-component.tsx` | 4 | crash screen header, version footer, report body, agent-facing `head` |
+| `config/index.tsx` | 1 | release-highlights setting description |
+| `mini/footer.permission.tsx` | 2 | permission prompt placeholder + text |
+| `routes/session/permission.tsx` | 1 | permission prompt text |
+| `mini/footer.prompt.tsx` | 1 | "close appycode" slash description |
+| `util/error-details.ts` | 2 | agent-facing debug prompts |
+| `feature-plugins/system/storybook/highlights.tsx` | 2 | storybook release-highlight fixtures |
+
+Decisions made:
+
+- `OC | ` prefix → `Appy | ` as the product's session-title abbreviation; revisit
+  in Phase 2 theme work if a different mark is preferred.
+- Kept "OpenCode includes free models…" (sidebar) — an OpenCode-service claim.
+- Kept "Upgrade to OpenCode Go" and all OpenCode Console/Go copy — service names.
+- Kept `opencode.ai/v2/docs` link and `openCode.*` command ids — ecosystem ids.
+- Kept theme ids (`opencode`, `opencode2`) — Phase 2 adds an appycode theme and
+  switches the default instead of renaming.
+
+Verification: `bun typecheck` in `packages/tui` — clean across 1,773 files.
+
