@@ -52,6 +52,15 @@ CLI/server/TUI. Do not repoint the pin: it is an upstream choice. Development
 must happen where pkg.pr.new is reachable, or the affected packages need an
 environment-specific resolution we document here.
 
+### husky pre-push requires `bun run check`
+
+Upstream's pre-push hook runs `bun run check` (lint + typecheck). In this
+workspace it fails because `packages/app` cannot typecheck without the
+pkg.pr.new dependency. Until the dependency is reachable here, push fork-only
+branches with `git push --no-verify`, and run `bun run check` manually for the
+packages you actually touched from their package directories. Restore normal
+pre-push behavior once egress allows pkg.pr.new or the checks pass again.
+
 ## Development recipes
 
 ```sh
