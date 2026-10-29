@@ -73,6 +73,36 @@ bun src/index.ts serve --port 4096   # dev server only (from packages/cli)
 curl localhost:4096/api/info         # expect {"_tag":"UnauthorizedError"} when healthy
 ```
 
+## Daily feature development workflow
+
+```sh
+git checkout -b short-hyphen-name our-release   # work branch from integration
+git commit -m "feat(tui): describe the change"  # conventional, fork commits too
+# verify what you touched, from the package you touched:
+#   cd packages/<pkg> && bun typecheck && bun run test
+git checkout our-release && git merge short-hyphen-name
+git push --no-verify
+```
+
+Branches off `our-release` are short-lived; never commit on `dev` (it may only
+fast-forward). For review before merging, open a PR on the fork branch instead.
+
+Choose the lane shaping the change:
+
+| Feature type | Lane | Where it lives |
+| --- | --- | --- |
+| Agent, command, skill, theme, instructions | A — data | config/markdown, fork-only paths |
+| New tool/plugin, MCP server, package | B — additive | new fork-only directories |
+| Changing existing behavior | C — surgical | 1–3 tracked files, ledgered at commit time |
+
+Lane C rules:
+
+1. Attempt an upstream contribution first when the change would serve everyone;
+   contributing costs design review but removes divergence permanently.
+2. Otherwise keep the diff minimal and add the ledger row in the same commit.
+3. Prefer the smallest reuse of upstream extension points (build defines like
+   `OPENCODE_CLI_NAME`, plugin APIs) to hand-written harnesses.
+
 ## Sync runbook
 
 ```sh
