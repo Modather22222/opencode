@@ -4,10 +4,9 @@
   "version": "2.2.0",
   "type": "module",
   "license": "MIT",
-  "homepage": "https://opencode.ai",
+  "homepage": "https://github.com/Modather22222/opencode",
   "author": {
-    "name": "OpenCode",
-    "email": "hello@opencode.ai"
+    "name": "appycode"
   },
   "scripts": {
     "typecheck": "bun check --no-script -b",
